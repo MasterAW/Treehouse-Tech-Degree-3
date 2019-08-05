@@ -119,12 +119,13 @@ const paypal = otherPaymentMethods.eq(1);
 const btc = otherPaymentMethods.eq(2);
 const paymentMethod = $('#payment');
 
+
 paypal.hide();
 btc.hide();
 $('#payment option').eq(0).hide();
 $('#payment option:selected').text('Credit Card');
-paymentMethod.change(   function () {
 
+paymentMethod.change(   function () {
   const paymentMethodSelected = $('#payment option:selected').text();
   if(paymentMethodSelected == "PayPal"){
     showHidePaymentMethod(paypal, creditCard, btc);
@@ -255,14 +256,27 @@ function activityError(){
 
 //when user clicks on register, check for errors.
 $(document).on("submit", function(){
+  const paymentMethodSelected = $('#payment option:selected').text();
   let error1 = emailErrorTest();
   let error2 = nameErrorTest();
   let error3 = creditErrorTest();
   let error4 = zipErrorTest();
   let error5 = cvvErrorTest();
   let error6 = activityError();
-  if((error1 == 0) || (error2 == 0) || (error3 == 0) || (error4 == 0) || (error5 == 0) || (error6 == 0)){
-    event.preventDefault();
+    if( paymentMethodSelected == "PayPal"){
+      if( error1 == 0 || error2 == 0 || error6 == 0 ) { //if payment method is PayPal, check for error 1,2,6 only.
+      event.preventDefault();
+      }
+    }
+    else if( paymentMethodSelected == "Bitcoin" ){//if payment method is Bitcoin, check for error 1,2,6 only.
+      if( error1 == 0 || error2 == 0 || error6 == 0 ) {
+      event.preventDefault();
+      }
+    }
+    else{
+      if( (error1 == 0) || (error2 == 0) || (error3 == 0) || (error4 == 0) || (error5 == 0) || (error6 == 0) ){ //if payment method is credit card, check for all errors.
+      event.preventDefault();
+    }
   }
 
 
